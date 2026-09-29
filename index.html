@@ -18,4 +18,24 @@ modal.addEventListener('click',event=>{if(event.target===modal)modal.close()});
 form.addEventListener('submit',event=>{event.preventDefault();if(!form.reportValidity())return;const d=new FormData(form);document.querySelector('#review').textContent=`入力内容の確認（予約は確定していません）\n\n希望プラン：${d.get('plan')}\nチェックイン：${d.get('checkin')}\n宿泊：${d.get('nights')}\n人数：大人 ${d.get('adults')}名・子ども ${d.get('children')}名\nお名前：${d.get('guest')}\nメール：${d.get('email')}\nご希望：${d.get('message')||'なし'}`;form.hidden=true;result.hidden=false;});
 document.querySelector('#edit').addEventListener('click',()=>{result.hidden=true;form.hidden=false;});
 modal.addEventListener('close',()=>{result.hidden=true;form.hidden=false;});
+// スマホ表示では画像下の説明文を含むpanel全体ではなく、画像実寸を基準にCTAを配置する。
+function alignMobileSectionCtas(){
+  document.querySelectorAll('.panel .section-cta').forEach(cta=>{
+    if(window.matchMedia('(max-width:700px)').matches){
+      const img=cta.parentElement.querySelector('img');
+      if(!img)return;
+      const place=()=>{
+        cta.style.bottom='auto';
+        cta.style.top=(img.offsetHeight*0.935)+'px';
+      };
+      if(img.complete)place();else img.addEventListener('load',place,{once:true});
+    }else{
+      cta.style.top='';
+      cta.style.bottom='';
+    }
+  });
+}
+alignMobileSectionCtas();
+window.addEventListener('resize',alignMobileSectionCtas);
+
 </script></body></html>
